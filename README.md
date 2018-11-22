@@ -1,13 +1,16 @@
-# Player Character Series - Punch - Part 1 
+# Unreal C++ Tutorial – Player Character Series – Punch – Part 2 - Collisions
 
 Hey guys,
 
-This is the starter project for my new video series going over various pieces of functionality of the player character.
+This is the starter project for the second part of our Player Character series. 
 
-This is first sample project from my video tutorial which you can find here: https://youtu.be/cWWuDf2ZUj0
+The topics we are going to cover in this tutorial are:
+* collions and how to create them
+* sockets and how to attach our colliders to our mesh
+* callbacks to accept responses from colliders
 
-This project is going to primarly go over adding in new animations to our player, binding them to input keys and then playing them back in various fun ways.
+You can find the associated video tutorial here: TBD
 
-The master branch of this project is the starter while part1-end is the fininished lesson.
+The master branch of this project is the starter while part2-end is the fininished lesson.
 
 Hope this helps, Thanks.
