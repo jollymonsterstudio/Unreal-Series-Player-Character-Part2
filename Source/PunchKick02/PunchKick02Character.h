@@ -44,8 +44,17 @@ class APunchKick02Character : public ACharacter
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Animation, meta = (AllowPrivateAccess = "true"))
 		class UAnimMontage* MeleeFistAttackMontage;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+		class UBoxComponent* RightHandCollisionBox;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+		class UBoxComponent* LeftHandCollisionBox;
+
 public:
 	APunchKick02Character();
+
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -54,6 +63,20 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	/**
+	* Method for input to execute on click
+	*/
+	void Attack();
+	/**
+	* Initiates player attack
+	*/
+	void AttackStart();
+
+	/**
+	* Stops player attack
+	*/
+	void AttackEnd();
 
 protected:
 
@@ -83,16 +106,6 @@ protected:
 
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/**
-	* Initiates player attack
-	*/
-	void AttackStart();
-
-	/**
-	* Stops player attack
-	*/
-	void AttackEnd();
 
 protected:
 	// APawn interface

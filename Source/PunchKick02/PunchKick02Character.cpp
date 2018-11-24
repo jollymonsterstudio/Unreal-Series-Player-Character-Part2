@@ -53,7 +53,26 @@ APunchKick02Character::APunchKick02Character()
 	if(MeleeFistAttackMontageObject.Succeeded()) 
 	{
 		MeleeFistAttackMontage = MeleeFistAttackMontageObject.Object;
-	}	
+	}
+
+	// initialize the collision boxes
+	LeftHandCollisionBox = CreateDefaultSubobject<UBoxComponent>(FName("LeftHandCollisionBox"));
+	LeftHandCollisionBox->SetCollisionProfileName("NoCollision");
+
+	RightHandCollisionBox = CreateDefaultSubobject<UBoxComponent>(FName("RightHandCollisionBox"));
+	RightHandCollisionBox->SetCollisionProfileName("NoCollision");
+}
+
+// Called when the game starts or when spawned
+void APunchKick02Character::BeginPlay()
+{
+	Super::BeginPlay();
+	// attach collision components to right / left hand sockets
+	const FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
+	// snap the collision boxes to our hand sockets
+	LeftHandCollisionBox->AttachToComponent(GetMesh(), AttachmentRules, "hand_l_collision");
+	RightHandCollisionBox->AttachToComponent(GetMesh(), AttachmentRules, "hand_r_collision");
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -85,10 +104,9 @@ void APunchKick02Character::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &APunchKick02Character::OnResetVR);
 
 	// attack functionality
-	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &APunchKick02Character::AttackStart);
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &APunchKick02Character::Attack);
 	PlayerInputComponent->BindAction("Attack", IE_Released, this, &APunchKick02Character::AttackEnd);
 }
-
 
 void APunchKick02Character::OnResetVR()
 {
@@ -146,10 +164,8 @@ void APunchKick02Character::MoveRight(float Value)
 	}
 }
 
-void APunchKick02Character::AttackStart()
+void APunchKick02Character::Attack()
 {
-	Log(ELogLevel::INFO, __FUNCTION__);
-	
 	// generate  number between 1 and 3:
 	int MontageSectionIndex = rand() % 3 + 1;
 
@@ -159,10 +175,19 @@ void APunchKick02Character::AttackStart()
 	PlayAnimMontage(MeleeFistAttackMontage, 1.f, FName(*MontageSection));
 }
 
+void APunchKick02Character::AttackStart()
+{
+	LeftHandCollisionBox->SetCollisionProfileName("Weapon");
+	RightHandCollisionBox->SetCollisionProfileName("Weapon");
+}
+
 void APunchKick02Character::AttackEnd()
 {
-	Log(ELogLevel::INFO, __FUNCTION__);
+	LeftHandCollisionBox->SetCollisionProfileName("NoCollision");
+	RightHandCollisionBox->SetCollisionProfileName("NoCollision");
 }
+
+
 
 void APunchKick02Character::Log(ELogLevel LogLevel, FString Message)
 {
