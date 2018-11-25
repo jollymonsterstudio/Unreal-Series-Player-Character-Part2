@@ -53,7 +53,30 @@ APunchKick02Character::APunchKick02Character()
 	if(MeleeFistAttackMontageObject.Succeeded()) 
 	{
 		MeleeFistAttackMontage = MeleeFistAttackMontageObject.Object;
-	}	
+	}
+	
+	LeftFistCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("LeftFistCollisionBox"));
+	LeftFistCollisionBox->SetupAttachment(RootComponent);
+	LeftFistCollisionBox->SetCollisionProfileName("NoCollision");
+
+	LeftFistCollisionBox->SetHiddenInGame(false);
+
+	RightFistCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("RightFistCollisionBox"));
+	RightFistCollisionBox->SetupAttachment(RootComponent);
+	RightFistCollisionBox->SetCollisionProfileName("NoCollision");
+
+	RightFistCollisionBox->SetHiddenInGame(false);
+}
+
+void APunchKick02Character::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// attach collision components to sockets based on transformations definitions
+	const FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
+	LeftFistCollisionBox->AttachToComponent(GetMesh(), AttachmentRules, "fist_l_collision");
+	RightFistCollisionBox->AttachToComponent(GetMesh(), AttachmentRules, "fist_r_collision");
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -61,7 +84,7 @@ APunchKick02Character::APunchKick02Character()
 
 void APunchKick02Character::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
-	// Set up gameplay key bindings
+	// Set up game play key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
@@ -85,7 +108,7 @@ void APunchKick02Character::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &APunchKick02Character::OnResetVR);
 
 	// attack functionality
-	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &APunchKick02Character::AttackStart);
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &APunchKick02Character::AttackInput);
 	PlayerInputComponent->BindAction("Attack", IE_Released, this, &APunchKick02Character::AttackEnd);
 }
 
@@ -146,10 +169,10 @@ void APunchKick02Character::MoveRight(float Value)
 	}
 }
 
-void APunchKick02Character::AttackStart()
+void APunchKick02Character::AttackInput()
 {
 	Log(ELogLevel::INFO, __FUNCTION__);
-	
+
 	// generate  number between 1 and 3:
 	int MontageSectionIndex = rand() % 3 + 1;
 
@@ -159,9 +182,20 @@ void APunchKick02Character::AttackStart()
 	PlayAnimMontage(MeleeFistAttackMontage, 1.f, FName(*MontageSection));
 }
 
+void APunchKick02Character::AttackStart()
+{
+	Log(ELogLevel::INFO, __FUNCTION__);
+
+	LeftFistCollisionBox->SetCollisionProfileName("Weapon");
+	RightFistCollisionBox->SetCollisionProfileName("Weapon");
+}
+
 void APunchKick02Character::AttackEnd()
 {
 	Log(ELogLevel::INFO, __FUNCTION__);
+
+	LeftFistCollisionBox->SetCollisionProfileName("NoCollision");
+	RightFistCollisionBox->SetCollisionProfileName("NoCollision");
 }
 
 void APunchKick02Character::Log(ELogLevel LogLevel, FString Message)

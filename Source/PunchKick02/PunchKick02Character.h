@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+
+#include "Components/BoxComponent.h"
+
 #include "PunchKick02Character.generated.h"
 
 UENUM(BlueprintType)
@@ -44,8 +47,32 @@ class APunchKick02Character : public ACharacter
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Animation, meta = (AllowPrivateAccess = "true"))
 		class UAnimMontage* MeleeFistAttackMontage;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Collision, meta = (AllowPrivateAccess = "true"))
+		class UBoxComponent* LeftFistCollisionBox;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Collision, meta = (AllowPrivateAccess = "true"))
+		class UBoxComponent* RightFistCollisionBox;
+
 public:
 	APunchKick02Character();
+
+	// Called when the game starts or when the player is spawned
+	virtual void BeginPlay() override;
+
+	/**
+	* Triggers attack animations based on user input
+	*/
+	void AttackInput();
+
+	/**
+	* Initiates player attack
+	*/
+	void AttackStart();
+
+	/**
+	* Stops player attack
+	*/
+	void AttackEnd();
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -83,16 +110,6 @@ protected:
 
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/**
-	* Initiates player attack
-	*/
-	void AttackStart();
-
-	/**
-	* Stops player attack
-	*/
-	void AttackEnd();
 
 protected:
 	// APawn interface
