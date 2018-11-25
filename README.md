@@ -11,6 +11,7 @@ The topics we are going to cover in this tutorial are:
 * UAnimNotifyState notifications that fire when our animations are triggered
 
 You can find more details here: http://jollymonsterstudio.com/2018/11/25/unreal-c-tutorial-player-character-series-punch-part-2-collisions/
+
 You can find the associated video tutorial here: https://youtu.be/IWnSlOmVhTM
 
 The master branch of this project is the starter while part2-end is the fininished lesson.
