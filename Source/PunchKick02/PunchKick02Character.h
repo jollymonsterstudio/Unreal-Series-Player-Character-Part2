@@ -4,9 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-
-#include "Components/BoxComponent.h"
-
 #include "PunchKick02Character.generated.h"
 
 UENUM(BlueprintType)
@@ -47,22 +44,8 @@ class APunchKick02Character : public ACharacter
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Animation, meta = (AllowPrivateAccess = "true"))
 		class UAnimMontage* MeleeFistAttackMontage;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Collision, meta = (AllowPrivateAccess = "true"))
-		class UBoxComponent* LeftFistCollisionBox;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Collision, meta = (AllowPrivateAccess = "true"))
-		class UBoxComponent* RightFistCollisionBox;
-
 public:
 	APunchKick02Character();
-
-	// Called when the game starts or when the player is spawned
-	virtual void BeginPlay() override;
-
-	/**
-	* Triggers attack animations based on user input
-	*/
-	void AttackInput();
 
 	/**
 	* Initiates player attack
