@@ -112,7 +112,6 @@ void APunchKick02Character::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("Attack", IE_Released, this, &APunchKick02Character::AttackEnd);
 }
 
-
 void APunchKick02Character::OnResetVR()
 {
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
@@ -197,6 +196,8 @@ void APunchKick02Character::AttackEnd()
 	LeftFistCollisionBox->SetCollisionProfileName("NoCollision");
 	RightFistCollisionBox->SetCollisionProfileName("NoCollision");
 }
+
+
 
 void APunchKick02Character::Log(ELogLevel LogLevel, FString Message)
 {
